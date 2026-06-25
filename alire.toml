@@ -1,0 +1,45 @@
+name = "qmc5883p"
+description = "Driver for QMC5883P magnetic sensor"
+version = "1.0.0"
+
+authors = ["Max Reznik"]
+maintainers = ["Max Reznik <reznikmm@gmail.com>"]
+maintainers-logins = ["reznikmm"]
+licenses = "Apache-2.0 WITH LLVM-exception"
+website = "https://github.com/reznikmm/qmc5883p"
+tags = ["sensor", "magnetometer", "driver"]
+project-files = ["gnat/qmc5883p.gpr"]
+
+long-description = '''
+# Driver for QMC5883P magnetic sensor.
+
+The QMC5883P driver enables the following functionalities:
+
+- Detect the presence of the sensor (chip ID check).
+- Perform a soft reset.
+- Configure the sensor operating mode, output data rate, over-sample rate,
+  down-sample rate, full-scale field range, and set/reset mode.
+- Query status: data-ready and overflow flags.
+- Conduct measurements as raw 16-bit values and Gauss-scaled values.
+
+The driver supports usage both with and without the Ada Driver Library,
+either via generic instantiation or by instantiating a tagged type object.
+
+More drivers in this style:
+[driver index](https://github.com/reznikmm/reznikmm/blob/main/drivers.md).
+'''
+
+[configuration]
+output_dir = "gnat"
+generate_ada = false
+generate_c = false
+
+[build-switches]
+development.optimization = ["-O0"]
+development.style_checks = ["-gnaty"]
+development.contracts = "Yes"
+"*".debug_info = "Yes"
+
+[[depends-on]]
+hal = "~0.3 | ^1"
+gnat = ">=11 & <2000" # Uses Ada 2022 syntax
