@@ -31,6 +31,8 @@ procedure Main is
    Sensor : QMC5883P.Sensors.QMC5883P_Sensor
      (I2C_Port => STM32.Device.I2C_1'Access);
 
+   --  Is_Cont : Boolean := False;
+
    procedure Configure_Sensor;
    --  Reconfigure sensor with settings from GUI state
 
@@ -91,11 +93,13 @@ procedure Main is
 
    procedure Configure_Sensor is
       use type QMC5883P.Over_Sample_Rate;
+      use type QMC5883P.Down_Sample_Rate;
 
-      Ok  : Boolean;
-      OSR : QMC5883P.Over_Sample_Rate := 1;
-      ODR : QMC5883P.Output_Data_Rate := 10;
-      FSR : QMC5883P.Sensor_Full_Scale_Range := 30;
+      Ok   : Boolean;
+      OSR1 : QMC5883P.Over_Sample_Rate := 1;
+      OSR2 : QMC5883P.Down_Sample_Rate := 1;
+      ODR  : QMC5883P.Output_Data_Rate := 10;
+      FSR  : QMC5883P.Sensor_Full_Scale_Range := 30;
 
       FSR_Map : constant array (G2 .. GY) of QMC5883P.Sensor_Full_Scale_Range
         := (2, 8, 12, 30);
@@ -105,7 +109,12 @@ procedure Main is
    begin
       for V of GUI.State (+O1 .. +O4) loop
          exit when V;
-         OSR := OSR * 2;
+         OSR1 := OSR1 * 2;
+      end loop;
+
+      for V of GUI.State (+D1 .. +D4) loop
+         exit when V;
+         OSR2 := OSR2 * 2;
       end loop;
 
       for R in G2 .. GY loop
@@ -122,20 +131,39 @@ procedure Main is
          end if;
       end loop;
 
-      Sensor.Set_Full_Range
-        ((Field_Range => FSR,
-          Set_Reset   => QMC5883P.Set_And_Reset_On,
-          Self_Test   => False),
+      Sensor.Set_Rates_And_Mode
+        ((Over_Sample => OSR1,
+          Down_Sample => OSR2,
+          Mode        => QMC5883P.Suspend),
          Ok);
       pragma Assert (Ok);
 
-      Sensor.Set_Rates_And_Mode
-        ((Over_Sample => OSR,
-          Down_Sample => 1,
-          Data_Rate   => ODR,
-          Mode        => QMC5883P.Normal),
-         Ok);
-      pragma Assert (Ok);
+      delay 0.01;
+
+      for J in reverse 1 .. 2 loop
+         --  Configure sensor twice to make it work stable
+         Sensor.Configure
+           ((Field_Range => FSR,
+             Set_Reset   => QMC5883P.Set_And_Reset_On,
+             Self_Test   => False),
+            (if GUI.State (+CO) then
+              (Over_Sample => OSR1,
+               Down_Sample => OSR2,
+               Mode        => QMC5883P.Continuous)
+             else
+              (Over_Sample => OSR1,
+               Down_Sample => OSR2,
+               Data_Rate   => ODR,
+               Mode        => QMC5883P.Normal)),
+            Ok);
+         pragma Assert (Ok);
+
+         exit when J = 1;
+
+         for K in 1 .. 10_000 loop
+            exit when Sensor.Is_Data_Ready;
+         end loop;
+      end loop;
    end Configure_Sensor;
 
    ----------------

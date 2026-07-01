@@ -29,6 +29,14 @@ package QMC5883P.Internal is
    function Check_Chip_Id (Device : Device_Context) return Boolean;
    --  Read chip ID register (0x00) and verify it equals Chip_Id.
 
+   procedure Configure
+     (Device  : Device_Context;
+      Setting : Full_Range_Configuration;
+      Samples : Rates_And_Mode_Configuration;
+      Success : out Boolean);
+   --  Write Control Register 2 (0x0B): full-scale range, set/reset, self-test,
+   --  then write Control Register 1 (0x0A): mode, ODR, OSR1, OSR2.
+
    procedure Set_Rates_And_Mode
      (Device  : Device_Context;
       Value   : Rates_And_Mode_Configuration;

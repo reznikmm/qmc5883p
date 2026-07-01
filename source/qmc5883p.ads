@@ -54,11 +54,16 @@ package QMC5883P is
    --  Full-scale field range in Gauss (+/-).
    --  The lowest range has the highest sensitivity and resolution.
 
-   type Rates_And_Mode_Configuration is record
+   type Rates_And_Mode_Configuration (Mode : Operating_Mode := Suspend) is
+   record
       Over_Sample : Over_Sample_Rate := 8;
       Down_Sample : Down_Sample_Rate := 1;
-      Data_Rate   : Output_Data_Rate := 10;
-      Mode        : Operating_Mode   := Suspend;
+      case Mode is
+         when Normal =>
+            Data_Rate : Output_Data_Rate := 10;
+         when others =>
+            null;
+      end case;
    end record;
    --  Configuration for Control Register 1 (0x0A).
    --  Controls the operating mode, output data rate, and sampling filters.

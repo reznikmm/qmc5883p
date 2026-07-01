@@ -131,18 +131,20 @@ package body QMC5883P.Raw is
       Mode : constant Natural := Operating_Mode'Pos (Value.Mode);
 
       ODR : constant Natural :=
-        (case Value.Data_Rate is
-            when  10 => 0,
-            when  50 => 1,
-            when 100 => 2,
-            when 200 => 3);
+        (if Value.Mode = Normal then
+           (case Value.Data_Rate is
+               when  10 => 0,
+               when  50 => 1,
+               when 100 => 2,
+               when 200 => 3)
+         else 0);
 
       OSR1 : constant Natural :=
         (case Value.Over_Sample is
-            when 8 => 0,
-            when 4 => 1,
+            when 1 => 3,
             when 2 => 2,
-            when 1 => 3);
+            when 4 => 1,
+            when 8 => 0);
 
       OSR2 : constant Natural :=
         (case Value.Down_Sample is

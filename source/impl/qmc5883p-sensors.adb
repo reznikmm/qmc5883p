@@ -42,6 +42,23 @@ package body QMC5883P.Sensors is
    function Is_Overflow (Self : QMC5883P_Sensor) return Boolean is
      (Dev.Is_Overflow (Self));
 
+   ---------------
+   -- Configure --
+   ---------------
+
+   procedure Configure
+     (Self    : in out QMC5883P_Sensor;
+      Setting : Full_Range_Configuration;
+      Samples : Rates_And_Mode_Configuration;
+      Success : out Boolean) is
+   begin
+      Dev.Configure (Self, Setting, Samples, Success);
+
+      if Success then
+         Self.Full_Range := Setting.Field_Range;
+      end if;
+   end Configure;
+
    ----------
    -- Read --
    ----------

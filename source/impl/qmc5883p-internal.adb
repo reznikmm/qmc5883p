@@ -24,6 +24,23 @@ package body QMC5883P.Internal is
       return Ok and Raw.Get_Chip_Id (Data) = Chip_Id;
    end Check_Chip_Id;
 
+   ---------------
+   -- Configure --
+   ---------------
+
+   procedure Configure
+     (Device  : Device_Context;
+      Setting : Full_Range_Configuration;
+      Samples : Rates_And_Mode_Configuration;
+      Success : out Boolean) is
+   begin
+      Set_Full_Range (Device, Setting, Success);
+
+      if Success then
+         Set_Rates_And_Mode (Device, Samples, Success);
+      end if;
+   end Configure;
+
    -------------------
    -- Is_Data_Ready --
    -------------------

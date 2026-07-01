@@ -103,12 +103,16 @@ package body GUI is
             State (+O1 .. +O4) := (others => False);
             State (+Button) := True;
             Update := True;
+         when D1 .. D4 =>
+            State (+D1 .. +D4) := (others => False);
+            State (+Button) := True;
+            Update := True;
          when G2 .. GY =>
             State (+G2 .. +GY) := (others => False);
             State (+Button) := True;
             Update := True;
-         when R1 .. R4 =>
-            State (+R1 .. +R4) := (others => False);
+         when CO | R1 .. R4 =>
+            State (+CO .. +R4) := (others => False);
             State (+Button) := True;
             Update := True;
          when Fx .. Fz =>

@@ -22,6 +22,14 @@ package QMC5883P.Sensors is
       Success : out Boolean);
    --  Soft reset: restore default values of all registers.
 
+   procedure Configure
+     (Self    : in out QMC5883P_Sensor;
+      Setting : Full_Range_Configuration;
+      Samples : Rates_And_Mode_Configuration;
+      Success : out Boolean);
+   --  Write Control Register 2 (0x0B): full-scale range, set/reset, self-test,
+   --  then write Control Register 1 (0x0A): mode, ODR, OSR1, OSR2.
+
    procedure Set_Rates_And_Mode
      (Self    : QMC5883P_Sensor;
       Value   : Rates_And_Mode_Configuration;

@@ -24,6 +24,8 @@ project QMC5883P_LCD is
    package Ide is
       for Program_Host use "localhost:4242";
       for Communication_Protocol use "remote";
-      for Connection_Tool use "st-util";
+      for Connection_Tool use "openocd";
+      for Connection_Config_Files use
+        ("interface/stlink.cfg", "target/stm32f4x.cfg");
    end Ide;
 end QMC5883P_LCD;
