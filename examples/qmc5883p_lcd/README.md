@@ -5,6 +5,8 @@ of a magnetometer sensor using the STM32 F4VE board
 and an LCD display included in the kit. The program features a straightforward
 graphical user interface (GUI) for configuring sensor parameters.
 
+![Demo screenshot](qmc5883p_lcd_x2.png)
+
 ## Overview
 
 The demonstration program works with the STM32 F4VE development board and a
@@ -14,8 +16,9 @@ parameters such as over-sample rate, full-scale range and output data rate.
 The display includes:
 * Toggle buttons (`Fx`, `Fy`, `Fz`) for enabling/disabling each field
   component on the plot.
-* Yellow buttons (`O1`, `O2`, `O4`, `O8`) for selecting the OSR1
-  over-sample rate (1, 2, 4, 8).
+* Yellow buttons (`O1`, `O2`, `O4`, `O8`) for selecting the `OSR1`
+  over-sample rate (1, 2, 4, 8) and yellow buttons (`D1`, `D2`, `D4`, `D8`)
+  for selecting down-sample rate (1, 2, 4, 8) for `OSR2`.
 * Grey buttons (`2G`, `8G`, `12`, `30`) for selecting the full-scale field
   range in Gauss.
 * Dark grey buttons (`R1`..`R4`) for selecting the output data rate
